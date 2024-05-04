@@ -1,3 +1,32 @@
 {
-  
+  "global": {
+    "player": "Gracz",
+    "fakeNames": [
+      "Janusz",
+      "Grażyna",
+      "Zbyszek",
+      "Krystyna",
+      "Wiesław",
+      "Jadwiga"
+    ]
+  },
+  "components": {
+    "createPlayerCard": {
+      "playerNameInputPlaceholder": "Imię gracza",
+      "playerType": {
+        "human": "Człowiek",
+        "computer": "Komputer"
+      }
+    }
+  },
+  "views": {
+    "introView": {
+      "playGame": "Zagraj",
+      "credits": "Autorzy"
+    },
+    "playersView": {
+      "title": "Gracze",
+      "startGame": "Rozpocznij grę"
+    }
+  }
 }
