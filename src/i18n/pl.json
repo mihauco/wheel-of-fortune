@@ -11,12 +11,13 @@
     ]
   },
   "components": {
-    "createPlayerCard": {
+    "playerCard": {
       "playerNameInputPlaceholder": "Imię gracza",
-      "playerType": {
-        "human": "Człowiek",
-        "computer": "Komputer"
-      }
+      "points": "Stan konta: {points} zł"
+    },
+    "playerTypeSelect": {
+      "human": "Człowiek",
+      "computer": "Komputer"
     }
   },
   "views": {

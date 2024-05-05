@@ -1,9 +1,9 @@
 <template>
-  <div class="intro">
+  <div class="intro-view">
     <Title />
-    <div class="intro__action-buttons">
-      <Button class="intro__action-button" to="/players">{{ $t('views.introView.playGame') }}</Button>
-      <Button class="intro__action-button" to="/credits">{{ $t('views.introView.credits') }}</Button>
+    <div class="intro-view__action-buttons">
+      <Button class="intro-view__action-button" to="/players">{{ $t('views.introView.playGame') }}</Button>
+      <Button class="intro-view__action-button" to="/credits">{{ $t('views.introView.credits') }}</Button>
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@ const { t: $t } = useI18n()
 </script>
 
 <style lang="scss">
-  .intro {
+  .intro-view {
     height: 100%;
 
     &__title {
