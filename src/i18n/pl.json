@@ -28,6 +28,20 @@
     "playersView": {
       "title": "Gracze",
       "startGame": "Rozpocznij grę"
+    },
+    "gameView": {
+      "hostTexts": {
+        "start": [
+          "Witam serdecznie w kolejnym odcinku Koła Fortyny! Przed nami kolejna rozgrywka, a więc czas na przedstawienie naszych uczestników."
+        ],
+        "playersIntro": [
+          "Oto nasi dzisiejsi zawodnicy: {players}."
+        ],
+        "mainPrizeInfo": "Przypominam, że główną nagrodą w naszym teletornieju jest nowy samochód osobowy - POLONEZ CARO!",
+        "ready": "Czy wszyscy są gotowi? Tak? To zaczynamy!",
+        "round1": "Zaczynam rundę pierwszą!",
+        "category": "Kategoria - {category}."
+      }
     }
   }
 }

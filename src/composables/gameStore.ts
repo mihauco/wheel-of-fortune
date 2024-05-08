@@ -10,6 +10,20 @@ const gameState = ref<GameState | null>(null)
 function useGameStore() {
   return {
     gameState: computed(() => gameState.value),
+    currentPuzzle: computed(() => {
+      if (gameState.value) {
+        return gameState.value.rounds[gameState.value.currentRoundIndex].displayWord
+      }
+
+      return ''
+    }),
+    currentCategory: computed(() => {
+      if (gameState.value) {
+        return gameState.value.rounds[gameState.value.currentRoundIndex].puzzle.category
+      }
+
+      return ''
+    }),
     startGame(playersConfig: PlayerConfig[]) {
       return getWordPuzzlesForGame().then((wordPuzzles) => {
         wheelOfFortune = new WheelOfFortune(

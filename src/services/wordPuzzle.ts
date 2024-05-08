@@ -6,24 +6,24 @@ export function getWordPuzzlesForGame() {
     setTimeout(() => {
       resolve([
         {
-          category: 'Animals',
-          word: 'Elephant'
+          category: 'Przysłowia',
+          word: 'Pieniądze to nie wszystko'
         },
         {
-          category: 'Fruits',
-          word: 'Banana'
+          category: 'Znane Postacie',
+          word: 'Osioł ze Shreka'
         },
         {
-          category: 'Cities',
-          word: 'Paris'
+          category: 'Miasta i miasteczka',
+          word: 'Kazimierz nad Wisłą'
         },
         {
-          category: 'Countries',
-          word: 'Spain'
+          category: 'Historia',
+          word: 'Bitwa pod Grunwaldem'
         },
         {
-          category: 'Colors',
-          word: 'Red'
+          category: 'Kinematografia',
+          word: 'Lot nad kukułczym gniazdem'
         }
       ])
     })
