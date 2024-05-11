@@ -15,10 +15,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  click: [void]
+  click: [MouseEvent]
 }>()
 
-const clickHandler = (event) => {
+const clickHandler = (event: MouseEvent) => {
   emit('click', event)
 
   if (props.to) {

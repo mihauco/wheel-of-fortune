@@ -18,6 +18,14 @@
     "playerTypeSelect": {
       "human": "Człowiek",
       "computer": "Komputer"
+    },
+    "wheel": {
+      "fields": {
+        "money": "{money}",
+        "bankrupt": "Bankrut",
+        "loseTurn": "Strata",
+        "prize": "Nagroda"
+      }
     }
   },
   "views": {
@@ -40,7 +48,8 @@
         "mainPrizeInfo": "Przypominam, że główną nagrodą w naszym teletornieju jest nowy samochód osobowy - POLONEZ CARO!",
         "ready": "Czy wszyscy są gotowi? Tak? To zaczynamy!",
         "round1": "Zaczynam rundę pierwszą!",
-        "category": "Kategoria - {category}."
+        "category": "Kategoria - {category}.",
+        "playerTurn": "Teraz kolej na {name}."
       }
     }
   }

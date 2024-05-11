@@ -24,6 +24,7 @@ function useGameStore() {
 
       return ''
     }),
+    wheel: computed(() => gameState.value?.wheel),
     startGame(playersConfig: PlayerConfig[]) {
       return getWordPuzzlesForGame().then((wordPuzzles) => {
         wheelOfFortune = new WheelOfFortune(
