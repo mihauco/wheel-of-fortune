@@ -18,7 +18,9 @@
         :category="currentCategory"
       />
       <Wheel
+        v-if="showWheel"
         class="game-view__wheel"
+        @spin-end="wheelSpinEnd"
       />
     </div>
     <div
@@ -29,7 +31,9 @@
         :player-config="currentPlayerConfig"
         :small="true"
       />
-      <TurnActions />
+      <TurnActions
+        @player-action="playerAction"
+      />
     </div>
     <div
       v-else
@@ -67,19 +71,42 @@ const showBoard = ref(false)
 const introDone = ref(false)
 const showTurnActions = ref(false)
 const hostText = ref('')
+const showWheel = ref(false)
 const currentPlayerConfig = computed(() => {
   return typeof gameState.value?.currentPlayerIndex === 'number'
     ? playersConfig[gameState.value.currentPlayerIndex].value : null
 })
 
 const hostTextEnd = () => {hostTextEndCallback && hostTextEndCallback()}
+const playerAction = (action: 'SPIN') => {playerActionCallback && playerActionCallback(action)}
+const wheelSpinEnd = (result: null | 'PRIZE' | 'LOSE_TURN' | 'BANKRUPT' | number) => {wheelSpinEndCallback && wheelSpinEndCallback(result)}
 let hostTextEndCallback: (() => void) | null = null
+let playerActionCallback: ((action: 'SPIN') => void) | null = null
+let wheelSpinEndCallback: ((result: null | 'PRIZE' | 'LOSE_TURN' | 'BANKRUPT' | number) => void) | null = null
 
 const waitForHostToFinishTalking = () => {
   return new Promise((resolve) => {
     hostTextEndCallback = () => {
       hostTextEndCallback = null
       resolve(true)
+    }
+  })
+}
+
+const waitForPlayerToChooseAction = () => {
+  return new Promise((resolve) => {
+    playerActionCallback = (action) => {
+      playerActionCallback = null
+      resolve(action)
+    }
+  })
+}
+
+const waitForWheelToFinishSpinning = () => {
+  return new Promise((resolve) => {
+    wheelSpinEndCallback = (result) => {
+      wheelSpinEndCallback = null
+      resolve(result)
     }
   })
 }
@@ -105,6 +132,7 @@ const runRound = async (roundIndex: 0 | 1 | 2 | 3 | 4) => {
   showBoard.value = true
   await sleep(1000);
   hostText.value = $t('views.gameView.hostTexts.category', { category: currentCategory.value })
+  await waitForHostToFinishTalking()
 
   runNextTurn()
 }
@@ -113,6 +141,14 @@ const runNextTurn = async () => {
   hostText.value = $t('views.gameView.hostTexts.playerTurn', { name: playersConfig[0].value.name })
   await waitForHostToFinishTalking()
   showTurnActions.value = true
+  const action = await waitForPlayerToChooseAction()
+
+  if (action === 'SPIN') {
+    showWheel.value = true
+    const result = await waitForWheelToFinishSpinning()
+    await sleep(1000);
+    showWheel.value = false
+  }
 }
 
 if (!gameState.value) {
@@ -157,14 +193,6 @@ if (!gameState.value) {
       display: grid;
       grid-template-columns: 1fr 3fr;
       gap: 1rem;
-    }
-
-    &__wheel {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 100;
     }
   }
 </style>

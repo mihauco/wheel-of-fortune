@@ -25,7 +25,8 @@
         "bankrupt": "Bankrut",
         "loseTurn": "Strata",
         "prize": "Nagroda"
-      }
+      },
+      "spinInfo": "Użyj <strong>SPACJI</strong> aby zatrzymać wskaźnik jak najbliżej środka i zakręcić kołem. Jeżeli koło nie wykona pełnego obrotu tracisz kolejkę!"
     }
   },
   "views": {
