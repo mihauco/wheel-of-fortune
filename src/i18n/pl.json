@@ -27,6 +27,13 @@
         "prize": "Nagroda"
       },
       "spinInfo": "Użyj <strong>SPACJI</strong> aby zatrzymać wskaźnik jak najbliżej środka i zakręcić kołem. Jeżeli koło nie wykona pełnego obrotu tracisz kolejkę!"
+    },
+    "turnActions": {
+      "spin": "Zakręć kołem",
+      "guessConosant": "Zgadnij spółgłoskę", 
+      "buyVowel": "Kup samogłoskę",
+      "solve": "Zgadnij hasło",
+      "pass": "Pasuję"
     }
   },
   "views": {

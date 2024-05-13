@@ -1,5 +1,9 @@
 <template>
-  <button class="button card-wrapper card-wrapper--hoverable" @click="clickHandler">
+  <button
+    class="button"
+    @click="clickHandler"
+    :disabled="props.disabled"
+  >
     <slot></slot>
   </button>
 </template>
@@ -11,7 +15,8 @@ import { defineEmits } from 'vue'
 const router = useRouter()
 
 const props = defineProps<{
-  to?: string
+  to?: string,
+  disabled?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -19,6 +24,8 @@ const emit = defineEmits<{
 }>()
 
 const clickHandler = (event: MouseEvent) => {
+  if (props.disabled) return
+
   emit('click', event)
 
   if (props.to) {
@@ -34,7 +41,24 @@ const clickHandler = (event: MouseEvent) => {
   padding: 0 2rem;
   border-radius: none;
   cursor: pointer;
-  font-weight: bold;
   font-size: 1.4rem;
+  border: none;
+  background-color: silver;
+  box-shadow: inset -0.2rem -0.2rem #0a0a0a,
+    inset 0.2rem 0.2rem #f5f5f5,
+    inset -0.4rem -0.4rem grey,
+    inset 0.4rem 0.4rem #dfdfdf;
+
+  &:active {
+    box-shadow: inset -0.2rem -0.2rem #f5f5f5,
+      inset 0.2rem 0.2rem #0a0a0a,
+      inset -0.4rem -0.4rem #dfdfdf,
+      inset 0.4rem 0.4rem grey;
+  }
+
+  &:disabled {
+    color: grey;
+    text-shadow: 1px 1px 0 #fff;
+  }
 }
 </style>

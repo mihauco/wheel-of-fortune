@@ -1,12 +1,13 @@
 <template>
   <div class="turn-actions card-wrapper">
-    <button @click="spin">{{ $t('components.turnActions.spin') }}</button>
+    <Button @click="spin">{{ $t('components.turnActions.spin') }}</Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { ref, defineEmits } from 'vue';
+import Button from '@/components/Button.vue';
 
 const { t: $t } = useI18n();
 const emit = defineEmits<{
