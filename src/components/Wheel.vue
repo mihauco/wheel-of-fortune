@@ -15,7 +15,7 @@
             transitionDuration: `${spinTime}s`
           }"
         >
-          <template v-for="(field, index) in fields">
+          <template v-for="(field, index) in wheelFields">
             <div
               class="wheel__line"
               :style="{
@@ -38,7 +38,7 @@
               }"
             >
               <div
-                v-for="letter in field.label" :key="letter"
+                v-for="letter in (field.label ? $t(field.label) : `${field.value}`)" :key="letter"
                 class="wheel__field-letter"
               >
                 {{ letter }}
@@ -60,122 +60,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineEmits } from 'vue';
-import { useI18n } from 'vue-i18n';
-import GameOverlay from '@/components/GameOverlay.vue';
+import { ref, onMounted, defineEmits } from 'vue'
+import { useI18n } from 'vue-i18n'
+import useGameStore from '@/composables/gameStore'
+import GameOverlay from '@/components/GameOverlay.vue'
+import wheelFields from '@/data/wheelFields'
+import type WheelField from 'core/types/WheelField.type'
 
-const { t: $t } = useI18n();
+const { t: $t } = useI18n()
+const { spinTheWheel } = useGameStore()
 const emit = defineEmits<{
-  spinEnd: [null | 'PRIZE' | 'LOSE_TURN' | 'BANKRUPT' | number]
+  spinEnd: [WheelField | null]
 }>();
-
 const wheelRadiusInRem = 14.5;
-
-const fields: {value: 'PRIZE' | 'LOSE_TURN' | 'BANKRUPT' | number, label: string, background: string}[] = [
-  {
-    value: 0,
-    label: $t('components.wheel.fields.money', {money: 0}),
-    background: '#B4B4B4'
-  },
-  {
-    value: 25,
-    label: $t('components.wheel.fields.money', {money: 25}),
-    background: '#FD7D96'
-  },
-  {
-    value: 50,
-    label: $t('components.wheel.fields.money', {money: 50}),
-    background: '#343399'
-  },
-  {
-    value: 75,
-    label: $t('components.wheel.fields.money', {money: 75}),
-    background: '#FEFE00'
-  },
-  {
-    value: 100,
-    label: $t('components.wheel.fields.money', {money: 100}),
-    background: '#FE4600'
-  },
-  {
-    value: 150,
-    label: $t('components.wheel.fields.money', {money: 150}),
-    background: '#00A500'
-  },
-  {
-    value: 200,
-    label: $t('components.wheel.fields.money', {money: 200}),
-    background: '#C9FE00'
-  },
-  {
-    value: 'PRIZE',
-    label: $t('components.wheel.fields.prize'),
-    background: '#C89601'
-  },
-  {
-    value: 250,
-    label: $t('components.wheel.fields.money', {money: 250}),
-    background: '#FE9900'
-  },
-  {
-    value: 300,
-    label: $t('components.wheel.fields.money', {money: 300}),
-    background: '#343399'
-  },
-  {
-    value: 350,
-    label: $t('components.wheel.fields.money', {money: 350}),
-    background: '#DF009D'
-  },
-  {
-    value: 400,
-    label: $t('components.wheel.fields.money', {money: 400}),
-    background: '#FE4600'
-    
-  },
-  {
-    value: 'BANKRUPT',
-    label: $t('components.wheel.fields.bankrupt'),
-    background: '#000'
-  },
-  {
-    value: 450,
-    label: $t('components.wheel.fields.money', {money: 450}),
-    background: '#FD7D96'
-  },
-  {
-    value: 500,
-    label: $t('components.wheel.fields.money', {money: 500}),
-    background: '#FE4600'
-  },
-  {
-    value: 1000,
-    label: $t('components.wheel.fields.money', {money: 1000}),
-    background: '#FEFE00'
-  },
-  {
-    value: 1500,
-    label: $t('components.wheel.fields.money', {money: 1500}),
-    background: '#343399'
-  },
-  {
-    value: 2000,
-    label: $t('components.wheel.fields.money', {money: 2000}),
-    background: '#FE9900'
-  },
-  {
-    value: 5000,
-    label: $t('components.wheel.fields.money', {money: 5000}),
-    background: '#00A500'
-  },
-  {
-    value: 'LOSE_TURN',
-    label: $t('components.wheel.fields.loseTurn'),
-    background: '#B4B4B4'
-  }
-]
-
-const fieldDegrees = 360 / fields.length
+const fieldDegrees = 360 / wheelFields.length
 const fieldWidth = Math.tan(fieldDegrees * Math.PI / 180) * wheelRadiusInRem
 const tilt = fieldDegrees * -0.5
 const spinDegrees = ref(0)
@@ -208,7 +106,7 @@ const spacebarHandler = (event: KeyboardEvent) => {
   if (event.key === ' ') {
     stopSpinPointer = true
 
-    // document.body.removeEventListener('keydown', spacebarHandler)
+    document.body.removeEventListener('keydown', spacebarHandler)
 
     const drawnValue = Math.abs(spinPointerPosition.value - 50)
     let successfullSpinProbability = 1
@@ -227,11 +125,11 @@ const spacebarHandler = (event: KeyboardEvent) => {
       }
     }
 
-    const successfullSpin = Math.random() < successfullSpinProbability
+    
+    const drawnFieldIndex = spinTheWheel(successfullSpinProbability)
 
-    if (successfullSpin) {
-      const drawnFieldIndex = Math.floor(Math.random() * fields.length)
-      const drawnField = fields[drawnFieldIndex]
+    if (drawnFieldIndex) {
+      const drawnField = wheelFields[drawnFieldIndex]
 
       spinTime.value = 5
       spinDegrees.value = 360 - drawnFieldIndex * fieldDegrees + 360;

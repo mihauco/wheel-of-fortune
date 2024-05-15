@@ -28,12 +28,21 @@
       },
       "spinInfo": "Użyj <strong>SPACJI</strong> aby zatrzymać wskaźnik jak najbliżej środka i zakręcić kołem. Jeżeli koło nie wykona pełnego obrotu tracisz kolejkę!"
     },
-    "turnActions": {
-      "spin": "Zakręć kołem",
-      "guessConosant": "Zgadnij spółgłoskę", 
-      "buyVowel": "Kup samogłoskę",
-      "solve": "Zgadnij hasło",
-      "pass": "Pasuję"
+    "turnMoves": {
+      "title": "Wykonaj ruch:",
+      "moves": {
+        "SPIN": "Zakręć kołem",
+        "GUESS_CONSONANT": "Zgadnij spółgłoskę", 
+        "BUY_VOWEL": "Kup samogłoskę",
+        "SOLVE": "Zgadnij hasło",
+        "PASS": "Pasuję"
+      }
+    },
+    "letterSelect": {
+      "title": {
+        "consonant": "Wybierz spółgłoskę",
+        "vowel": "Wybierz samogłoskę"
+      }
     }
   },
   "views": {

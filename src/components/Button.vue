@@ -1,6 +1,7 @@
 <template>
   <button
     class="button"
+    :class="{ 'button--small': props.small }"
     @click="clickHandler"
     :disabled="props.disabled"
   >
@@ -16,7 +17,8 @@ const router = useRouter()
 
 const props = defineProps<{
   to?: string,
-  disabled?: boolean
+  disabled?: boolean,
+  small?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -59,6 +61,12 @@ const clickHandler = (event: MouseEvent) => {
   &:disabled {
     color: grey;
     text-shadow: 1px 1px 0 #fff;
+  }
+
+  &--small {
+    height: 3rem;
+    padding: 0 1rem;
+    font-size: 1.2rem;
   }
 }
 </style>
