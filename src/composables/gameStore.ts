@@ -38,6 +38,14 @@ function useGameStore() {
 
       return []
     }),
+    playersPoints: computed(() => {
+      if (gameState.value) {
+        console.log(gameState.value.players.map(player => player.points));
+        return gameState.value.players.map(player => player.points)
+      }
+
+      return []
+    }),
     spinTheWheel(successfullSpinProbability: number) {
       if (wheelOfFortune && gameState.value) {
         const drawnWheelFieldIndex = wheelOfFortune.makeMove(gameState.value.currentPlayerIndex, 'SPIN', {successfullSpinProbability})

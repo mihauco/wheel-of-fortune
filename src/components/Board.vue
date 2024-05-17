@@ -7,25 +7,29 @@
       :line="line"
     />
     <div class="board__category">
-      <span class="board__category-text">{{ props.category }}</span>
+      <span class="board__category-text">{{ currentCategory }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import BoardLine from '@/components/BoardLine.vue';
-import { computed, defineEmits } from 'vue';
+import { computed, defineEmits, watch } from 'vue';
+import useGameStore from '@/composables/gameStore';
 import puzzleToBoard from '@/utils/puzzleToBoard';
 
-const props = defineProps<{
-  wordPuzzle: string,
-  category: string
-}>();
+const { currentPuzzle, currentCategory } = useGameStore();
 
-const emit = defineEmits()
+const emit = defineEmits<{
+  letterAnimationEnd: []
+}>()
 
 const board = computed(() => {
-  return puzzleToBoard(props.wordPuzzle);
+  return puzzleToBoard(currentPuzzle.value);
+});
+
+watch(() => currentPuzzle.value, () => {
+  emit('letterAnimationEnd');
 });
 </script>
 

@@ -57,16 +57,70 @@
     "gameView": {
       "hostTexts": {
         "start": [
-          "Witam serdecznie w kolejnym odcinku Koła Fortyny! Przed nami kolejna rozgrywka, a więc czas na przedstawienie naszych uczestników."
+          "Witam serdecznie w kolejnym odcinku KOŁA FORTUNY! Przed nami kolejna emocjonująca gra!",
+          "Wiewiórki i bobry - dzień dobry, dzień dobry! Witamy w KOLE FORTUNY!",
+          "Jak w porach roku Vivaldiego - tak i w naszym teleturnieju - zawsze jest coś nowego! Witam w KOLE FORTUNY!"
+        ],
+        "mainPrizeInfo": [
+          "Przypominam, że główną nagrodą w naszym teletornieju jest nowy samochód osobowy - POLONEZ CARO!"
         ],
         "playersIntro": [
-          "Oto nasi dzisiejsi zawodnicy: {players}."
+          "Oto nasi dzisiejsi zawodnicy: {players}.",
+          "O ten wspaniały samochód będą walczyć: {players}."
         ],
-        "mainPrizeInfo": "Przypominam, że główną nagrodą w naszym teletornieju jest nowy samochód osobowy - POLONEZ CARO!",
-        "ready": "Czy wszyscy są gotowi? Tak? To zaczynamy!",
-        "round1": "Zaczynam rundę pierwszą!",
-        "category": "Kategoria - {category}.",
-        "playerTurn": "Teraz kolej na {name}."
+        "ready":[
+          "Czy wszyscy są gotowi? Tak? To zaczynamy!"
+        ],
+        "round1": [
+          "Zaczynam rundę pierwszą!"
+        ],
+        "category": [
+          "Kategoria - {category}."
+        ],
+        "playerTurn": [
+          "Teraz pora na... {name}! Do dzieła!"
+        ],
+        "turnFirstMove": [
+          "{name}, kręcisz kołem!"
+        ],
+        "turnAnotherMove": [
+          "{name}, co zrobisz teraz?"
+        ],
+        "spinFail": [
+          "Za lekko! Koło nie wykonało pełnego obrotu, tracisz kolejkę!"
+        ],
+        "spinSuccessZeroPoints": [
+          "No... pieniążków z tego nie będzie, ale przynajmniej grasz dalej!",
+          "Ahhh zero... No cóż, przynajmniej nie straciłeś kolejki!",
+          "...zeroooooo... mniej niż zeroooo... no ale nie ma się co martwić, grasz dalej!"
+        ],
+        "spinSuccessPoints": [
+          "A więc pieniążki - za każdą odgadniętą spółgłoskę otrzymasz {points} złotych!",
+          "{points} złotych za każdą odgadniętą spółgłoskę."
+        ],
+        "spinBankrupt": [
+          "Bankrut! Tracisz wszystkie pieniądze i kolejkę!",
+          "Ajajajajajaj.... no niestety, bankrut! Zero na koncie i kolejka idzie dalej!"
+        ],
+        "spinLooseTurn": [
+          "STRATA - Tracisz kolejkę.",
+          "No, trudno, strata - kolejka idzie dalej."
+        ],
+        "spinPrize": [
+          "Ulala, nadgroda"
+        ],
+        "guessConsonant": [
+          "Wybierz spółgłoskę."
+        ],
+        "guessConsonantSuccess_one": [
+          "Trafiony! W haśle jest jedna spółgłoska {letter}."
+        ],
+        "guessConsonantSuccess_many": [
+          "Brawo! Spółgłoska {letter} występuje w haśle {hits} razy."
+        ],
+        "guessConsonantFail": [
+          "Niestety, w haśle nie ma {letter}."
+        ]
       }
     }
   }

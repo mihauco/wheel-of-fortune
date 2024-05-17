@@ -30,7 +30,10 @@ const props = defineProps<{
   type: 'vowel' | 'consonant'
 }>()
 const emit = defineEmits<{
-  selectEnd: [number]
+  selectEnd: [{
+    hits: number,
+    letter: string
+  }]
 }>()
 
 const consoants = {
@@ -47,7 +50,7 @@ const lettersToSelect = computed(() => {
 
 const handleLetterClick = (letter: string) => {
   const hits = guessConsonant(letter)
-  emit('selectEnd', hits)
+  emit('selectEnd', { hits, letter })
 }
 </script>
 

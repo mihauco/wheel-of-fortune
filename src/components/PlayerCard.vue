@@ -16,7 +16,12 @@
       </template>
       <template v-else>
         <div class="player-card__name">{{ playerName }}</div>
-        <div class="player-card__points">{{ $t('components.playerCard.points', {points: playerPoints}) }}</div>
+        <div
+          v-if="points !== undefined"
+          class="player-card__points"
+        >
+          {{ $t('components.playerCard.points', {points}) }}
+        </div>
       </template>
     </div>
   </div>
@@ -33,6 +38,7 @@ const props = defineProps<{
   playerConfig: PlayerConfig,
   edit?: boolean,
   small?: boolean
+  points?: number
 }>()
 
 const emit = defineEmits<{
@@ -65,7 +71,6 @@ const playerType = computed({
   }
 })
 
-const playerPoints = ref(0);
 </script>
 
 <style lang="scss">

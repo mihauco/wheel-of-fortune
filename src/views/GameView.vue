@@ -14,8 +14,7 @@
       class="game-view__board"
     >
       <Board
-        :word-puzzle="currentPuzzle"
-        :category="currentCategory"
+        @letter-animation-end="boardLetterAnimationEnd"
       />
       <Wheel
         v-if="showWheel"
@@ -35,6 +34,7 @@
     >
       <PlayerCard
         :player-config="currentPlayerConfig"
+        :points="currentPlayerPoints"
         :small="true"
       />
       <TurnMoves
@@ -49,6 +49,7 @@
         v-for="(playerConfig, index) in playersConfig"
         :key="index"
         :player-config="playerConfig.value"
+        :points="playersPoints[index]"
         :small="true"
       />
     </div>
@@ -62,6 +63,7 @@ import { ref, onMounted, computed } from 'vue'
 import usePlayersConfig from '@/composables/playersConfig';
 import useGameStore from '@/composables/gameStore';
 import sleep from '@/utils/sleep';
+import tKeyRandom from '@/utils/tKeyRandom';
 import PlayerCard from '@/components/PlayerCard.vue';
 import Board from '@/components/Board.vue';
 import Host from '@/components/Host.vue';
@@ -72,7 +74,7 @@ import LetterSelect from '@/components/LetterSelect.vue';
 const router = useRouter()
 const { t: $t } = useI18n()
 const { playersConfig } = usePlayersConfig()
-const { gameState, updateGameState, currentPuzzle, currentCategory } = useGameStore()
+const { gameState, updateGameState, currentCategory, playersPoints } = useGameStore()
 const showBoard = ref(false)
 const introDone = ref(false)
 const showTurnActions = ref(false)
@@ -83,15 +85,21 @@ const currentPlayerConfig = computed(() => {
   return typeof gameState.value?.currentPlayerIndex === 'number'
     ? playersConfig[gameState.value.currentPlayerIndex].value : null
 })
+const currentPlayerPoints = computed(() => {
+  return typeof gameState.value?.currentPlayerIndex === 'number'
+    ? playersPoints.value[gameState.value.currentPlayerIndex] : 0
+})
 
 const hostTextEnd = () => {hostTextEndCallback && hostTextEndCallback()}
 const playerMove = (action: 'SPIN') => {playerMoveCallback && playerMoveCallback(action)}
 const wheelSpinEnd = (result: null | 'PRIZE' | 'LOSE_TURN' | 'BANKRUPT' | number) => {wheelSpinEndCallback && wheelSpinEndCallback(result)}
-const letterSelectEnd = (hits: number) => { letterSelectEndCallback && letterSelectEndCallback(hits) }
+const letterSelectEnd = (result: {hits: number, letter: string}) => { letterSelectEndCallback && letterSelectEndCallback(result) }
+const boardLetterAnimationEnd = () => { boardLetterAnimationEndCallback && boardLetterAnimationEndCallback()}
 let hostTextEndCallback: (() => void) | null = null
 let playerMoveCallback: ((action: 'SPIN') => void) | null = null
 let wheelSpinEndCallback: ((result: null | 'PRIZE' | 'LOSE_TURN' | 'BANKRUPT' | number) => void) | null = null
-let letterSelectEndCallback: ((hits: number) => void) | null = null
+let letterSelectEndCallback: ((result: {hits: number, letter: string}) => void) | null = null
+let boardLetterAnimationEndCallback: (() => void) | null = null
 
 const waitForHostToFinishTalking = () => {
   return new Promise((resolve) => {
@@ -111,7 +119,7 @@ const waitForPlayerToMakeMove = () => {
   })
 }
 
-const waitForWheelToFinishSpinning = () => {
+const waitForWheelToFinishSpinning: () => Promise<number | 'LOSE_TURN' | 'BANKRUPT' | 'PRIZE' | null> = () => {
   return new Promise((resolve) => {
     wheelSpinEndCallback = (result) => {
       wheelSpinEndCallback = null
@@ -120,80 +128,113 @@ const waitForWheelToFinishSpinning = () => {
   })
 }
 
-const waitForPlayerToSelectLetter = () => {
+const waitForPlayerToSelectLetter: () => Promise<{hits: number, letter: string}> = () => {
   return new Promise((resolve) => {
-    letterSelectEndCallback = (hits) => {
+    letterSelectEndCallback = ({hits, letter}) => {
       letterSelectEndCallback = null
-      resolve(hits)
+      resolve({hits, letter})
+    }
+  })
+}
+
+const waitForBoardLetterAnimationEnd = () => {
+  return new Promise((resolve) => {
+    boardLetterAnimationEndCallback = () => {
+      boardLetterAnimationEndCallback = null
+      resolve(true)
     }
   })
 }
 
 const runIntro = async () => {
-  hostText.value = $t('views.gameView.hostTexts.start[0]')
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.start'))
   await waitForHostToFinishTalking()
-  await sleep(1000);
-  hostText.value = $t('views.gameView.hostTexts.playersIntro[0]', { players: playersConfig.map(player => player.value.name).join(', ')})
+  await sleep(500);
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.playersIntro[0]'), { players: playersConfig.map(player => player.value.name).join(', ')})
   await waitForHostToFinishTalking()
-  await sleep(1000);
-  hostText.value = $t('views.gameView.hostTexts.mainPrizeInfo')
+  await sleep(500);
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.mainPrizeInfo'))
   await waitForHostToFinishTalking()
-  await sleep(1000);
-  hostText.value = $t('views.gameView.hostTexts.ready')
+  await sleep(500);
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.ready'))
   await waitForHostToFinishTalking()
-  await sleep(1000);
+  await sleep(500);
 }
 
 const runRound = async (roundIndex: 0 | 1 | 2 | 3 | 4) => {
-  hostText.value = $t('views.gameView.hostTexts.round1')
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.round1'))
   await waitForHostToFinishTalking()
   showBoard.value = true
-  await sleep(1000);
-  hostText.value = $t('views.gameView.hostTexts.category', { category: currentCategory.value })
+  await sleep(500);
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.category'), { category: currentCategory.value })
   await waitForHostToFinishTalking()
-
+  await sleep(500);
   runNextTurn()
 }
 
 const runNextTurn = async () => {
   let isFirstMoveInPlayersTurn = true
-  hostText.value = $t('views.gameView.hostTexts.playerTurn', { name: playersConfig[0].value.name })
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.playerTurn'), { name: playersConfig[0].value.name })
   await waitForHostToFinishTalking()
+  await sleep(500);
   showTurnActions.value = true
 
   while (gameState.value?.currentPlayerPossibleMoves.length) {
     if (isFirstMoveInPlayersTurn) {
-      hostText.value = $t('views.gameView.hostTexts.turn.first', { name: currentPlayerConfig?.value?.name })
+      hostText.value = $t(tKeyRandom('views.gameView.hostTexts.turnFirstMove'), { name: currentPlayerConfig?.value?.name })
     } else {
-      hostText.value = $t('views.gameView.hostTexts.turn.next', { name: currentPlayerConfig?.value?.name })
+      hostText.value = $t(tKeyRandom('views.gameView.hostTexts.turnAnotherMove'), { name: currentPlayerConfig?.value?.name })
     }
+
+    await sleep(500);
 
     isFirstMoveInPlayersTurn = false
     await waitForHostToFinishTalking()
+    await sleep(500);
     const move = await waitForPlayerToMakeMove()
 
     if (move === 'SPIN') {
       showWheel.value = true
       const result = await waitForWheelToFinishSpinning()
+
       if (result) {
-        hostText.value = $t('views.gameView.hostTexts.spinSuccess', { result })
+        if (typeof result === 'number') {
+          if (result === 0) {
+            hostText.value = $t(tKeyRandom('views.gameView.hostTexts.spinZeroPoints'))
+          } else {
+            hostText.value = $t(tKeyRandom('views.gameView.hostTexts.spinPoints'), { points: result })
+          }
+        } else if (result === 'BANKRUPT') {
+          hostText.value = $t(tKeyRandom('views.gameView.hostTexts.spinBankrupt'))
+        } else if (result === 'LOSE_TURN') {
+          hostText.value = $t(tKeyRandom('views.gameView.hostTexts.spinLoseTurn'))
+        } else {
+          hostText.value = $t(tKeyRandom('views.gameView.hostTexts.spinPrize'))
+        }
       } else {
-        hostText.value = $t('views.gameView.hostTexts.spinFail')
+        hostText.value = $t(tKeyRandom('views.gameView.hostTexts.spinFail'))
       }
       await waitForHostToFinishTalking()
+      await sleep(500);
       showWheel.value = false
     } else if (move === 'GUESS_CONSONANT') {
-      hostText.value = $t('views.gameView.hostTexts.gessConsonant')
+      hostText.value = $t(tKeyRandom('views.gameView.hostTexts.guessConsonant'))
       await waitForHostToFinishTalking()
+      await sleep(500);
       guessLetter.value = 'consonant'
-      const hits = await waitForPlayerToSelectLetter()
+      const {hits, letter} = await waitForPlayerToSelectLetter()
       if (hits) {
-        hostText.value = $t('views.gameView.hostTexts.guessConsonantSuccess', { hits })
+        if (hits === 1) {
+          hostText.value = $t(tKeyRandom('views.gameView.hostTexts.guessConsonantSuccess_one'), { letter })
+        } else {
+          hostText.value = $t(tKeyRandom('views.gameView.hostTexts.guessConsonantSuccess_many'), { hits, letter })
+        }
       } else {
-        hostText.value = $t('views.gameView.hostTexts.guessConsonantFail')
+        hostText.value = $t(tKeyRandom('views.gameView.hostTexts.guessConsonantFail'))
       }
       guessLetter.value = null
       await waitForHostToFinishTalking()
+      sleep(500)
     } else if (move === 'GUESS_PHRASE') {
       // handle phrase guess
     }
