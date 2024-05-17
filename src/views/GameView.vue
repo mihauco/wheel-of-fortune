@@ -74,7 +74,7 @@ import LetterSelect from '@/components/LetterSelect.vue';
 const router = useRouter()
 const { t: $t } = useI18n()
 const { playersConfig } = usePlayersConfig()
-const { gameState, updateGameState, currentCategory, playersPoints } = useGameStore()
+const { gameState, updateGameState, currentCategory, playersPoints, playerPass } = useGameStore()
 const showBoard = ref(false)
 const introDone = ref(false)
 const showTurnActions = ref(false)
@@ -174,7 +174,7 @@ const runRound = async (roundIndex: 0 | 1 | 2 | 3 | 4) => {
 
 const runNextTurn = async () => {
   let isFirstMoveInPlayersTurn = true
-  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.playerTurn'), { name: playersConfig[0].value.name })
+  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.playerTurn'), { name: currentPlayerConfig?.value?.name })
   await waitForHostToFinishTalking()
   await sleep(500);
   showTurnActions.value = true
@@ -235,12 +235,40 @@ const runNextTurn = async () => {
       guessLetter.value = null
       await waitForHostToFinishTalking()
       sleep(500)
+    } else if (move === 'BUY_VOWEL') {
+      hostText.value = $t(tKeyRandom('views.gameView.hostTexts.buyVowel'))
+      await waitForHostToFinishTalking()
+      await sleep(500);
+      guessLetter.value = 'vowel'
+      const {hits, letter} = await waitForPlayerToSelectLetter()
+      if (hits) {
+        if (hits === 1) {
+          hostText.value = $t(tKeyRandom('views.gameView.hostTexts.guessVowelSuccess_one'), { letter })
+        } else {
+          hostText.value = $t(tKeyRandom('views.gameView.hostTexts.guessVowelSuccess_many'), { hits, letter })
+        }
+      } else {
+        hostText.value = $t(tKeyRandom('views.gameView.hostTexts.guessVowelFail'))
+      }
+      guessLetter.value = null
+      await waitForHostToFinishTalking()
+      sleep(500)
     } else if (move === 'GUESS_PHRASE') {
       // handle phrase guess
+    } else if (move === 'PASS') {
+      hostText.value = $t(tKeyRandom('views.gameView.hostTexts.pass'))
+      playerPass()
+      await waitForHostToFinishTalking()
+      await sleep(500);
+      break
     }
 
     updateGameState()
   }
+
+  showTurnActions.value = false
+  updateGameState()
+  runNextTurn()
 }
 
 if (!gameState.value) {

@@ -89,12 +89,12 @@
         "spinFail": [
           "Za lekko! Koło nie wykonało pełnego obrotu, tracisz kolejkę!"
         ],
-        "spinSuccessZeroPoints": [
+        "spinZeroPoints": [
           "No... pieniążków z tego nie będzie, ale przynajmniej grasz dalej!",
           "Ahhh zero... No cóż, przynajmniej nie straciłeś kolejki!",
           "...zeroooooo... mniej niż zeroooo... no ale nie ma się co martwić, grasz dalej!"
         ],
-        "spinSuccessPoints": [
+        "spinPoints": [
           "A więc pieniążki - za każdą odgadniętą spółgłoskę otrzymasz {points} złotych!",
           "{points} złotych za każdą odgadniętą spółgłoskę."
         ],
@@ -102,7 +102,7 @@
           "Bankrut! Tracisz wszystkie pieniądze i kolejkę!",
           "Ajajajajajaj.... no niestety, bankrut! Zero na koncie i kolejka idzie dalej!"
         ],
-        "spinLooseTurn": [
+        "spinLoseTurn": [
           "STRATA - Tracisz kolejkę.",
           "No, trudno, strata - kolejka idzie dalej."
         ],
@@ -120,6 +120,21 @@
         ],
         "guessConsonantFail": [
           "Niestety, w haśle nie ma {letter}."
+        ],
+        "guessVowelSuccess_one": [
+          "Mamy to! W haśle jest jedna samogłoska {letter}."
+        ],
+        "guessVowelSuccess_many": [
+          "Świetnie! Samogłoska {letter} występuje w haśle {hits} razy."
+        ],
+        "guessVowelFail": [
+          "Niestety, w haśle nie ma {letter}."
+        ],
+        "pass": [
+          "Pasujesz? No dobrze, kolejka idzie dalej."
+        ],
+        "buyVowel": [
+          "Kupujesz samogłoskę? A proszę bardzo, kto bogategmu zabroni."
         ]
       }
     }

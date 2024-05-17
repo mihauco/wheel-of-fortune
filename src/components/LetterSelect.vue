@@ -25,7 +25,7 @@ import { computed, defineEmits } from 'vue'
 import useGameStore from '@/composables/gameStore';
 
 const { t: $t } = useI18n()
-const { guessConsonant } = useGameStore()
+const { guessConsonant, buyVowel } = useGameStore()
 const props = defineProps<{
   type: 'vowel' | 'consonant'
 }>()
@@ -49,7 +49,7 @@ const lettersToSelect = computed(() => {
 })
 
 const handleLetterClick = (letter: string) => {
-  const hits = guessConsonant(letter)
+  const hits = props.type === 'vowel' ? buyVowel(letter) : guessConsonant(letter)
   emit('selectEnd', { hits, letter })
 }
 </script>

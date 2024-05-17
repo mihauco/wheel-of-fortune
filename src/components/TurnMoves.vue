@@ -5,6 +5,7 @@
     </div>
     <div class="turn-moves__buttons">
       <Button
+        class="turn-moves__button"
         v-for="button in buttons"
         :small="true"
         @click="handleMoveButtonClick(button.move)"
@@ -55,6 +56,10 @@ const handleMoveButtonClick = (move: PlayerMove) => {
 
   &__buttons {
     display: flex;
+  }
+
+  &__button:not(:last-child) {
+    margin-right: 1rem;
   }
 }
 </style>

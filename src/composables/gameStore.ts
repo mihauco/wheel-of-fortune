@@ -62,14 +62,27 @@ function useGameStore() {
 
       return 0
     },
+    buyVowel(vowel: string) {
+      if (wheelOfFortune && gameState.value) {
+        const hits = wheelOfFortune.makeMove(gameState.value.currentPlayerIndex, 'BUY_VOWEL', {guess: vowel})
+        return hits
+      }
+
+      return 0
+    },
+    playerPass() {
+      if (wheelOfFortune && gameState.value) {
+        wheelOfFortune.makeMove(gameState.value.currentPlayerIndex, 'PASS')
+      }
+    },
     wheel: computed(() => gameState.value?.wheel),
     startGame(playersConfig: PlayerConfig[]) {
       return getWordPuzzlesForGame().then((wordPuzzles) => {
-        wheelOfFortune = new WheelOfFortune(
-          playersConfig.map(player => player.name) as [string, string, string, string],
-          wordPuzzles,
-          wheelFields.map(field => field.value)
-        )
+        wheelOfFortune = new WheelOfFortune({
+          playerNames: playersConfig.map(player => player.name) as [string, string, string, string],
+          wordPuzzleDictionary: wordPuzzles,
+          wheel: wheelFields.map(field => field.value)
+        })
 
         gameState.value = wheelOfFortune.getState()
       })
