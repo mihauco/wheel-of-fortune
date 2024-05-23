@@ -43,6 +43,10 @@
         "consonant": "Wybierz spółgłoskę",
         "vowel": "Wybierz samogłoskę"
       }
+    },
+    "solve": {
+      "title": "Podaj hasło",
+      "buttonLabel": "OK"
     }
   },
   "views": {
@@ -121,6 +125,9 @@
         "guessConsonantFail": [
           "Niestety, w haśle nie ma {letter}."
         ],
+        "guessConsonantAlreadyUsed": [
+          "Spółgłoska {leter}? Było! Pamięć zawodzi, może przydałby się magnez."
+        ],
         "guessVowelSuccess_one": [
           "Mamy to! W haśle jest jedna samogłoska {letter}."
         ],
@@ -130,11 +137,26 @@
         "guessVowelFail": [
           "Niestety, w haśle nie ma {letter}."
         ],
+        "guessVowelAlreadyUsed": [
+          "Samogłoska {leter}? Było! Pamięć zawodzi, może przydałby się magnez."
+        ],
         "pass": [
           "Pasujesz? No dobrze, kolejka idzie dalej."
         ],
         "buyVowel": [
           "Kupujesz samogłoskę? A proszę bardzo, kto bogategmu zabroni."
+        ],
+        "solve": [
+          "Chcesz zgadnąć hasło? No to czekam na odpowiedź..."
+        ],
+        "solveWait": [
+          "Zobaczmy..."
+        ],
+        "solveSuccess": [
+          "Brawo! Wygrywasz rundę!"
+        ],
+        "solveFail": [
+          "Niestety, to nie tego szukamy..."
         ]
       }
     }

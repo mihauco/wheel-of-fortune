@@ -75,6 +75,13 @@ function useGameStore() {
         wheelOfFortune.makeMove(gameState.value.currentPlayerIndex, 'PASS')
       }
     },
+    solve(guess: string) {
+      if (wheelOfFortune && gameState.value) {
+        return wheelOfFortune.makeMove(gameState.value.currentPlayerIndex, 'SOLVE', {guess})
+      }
+
+      return false
+    },
     wheel: computed(() => gameState.value?.wheel),
     startGame(playersConfig: PlayerConfig[]) {
       return getWordPuzzlesForGame().then((wordPuzzles) => {

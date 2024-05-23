@@ -31,7 +31,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{
   selectEnd: [{
-    hits: number,
+    hits: number | null,
     letter: string
   }]
 }>()
