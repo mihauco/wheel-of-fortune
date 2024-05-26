@@ -10,7 +10,20 @@
       />
     </div>
     <div
-      v-if="showBoard"
+      v-if="prizeToShow || textToShow"
+      class="game-view__neon"
+    >
+      <NeonPrize
+        v-if="prizeToShow"
+        :prize="prizeToShow"
+      />
+      <NeonText
+        v-else-if="textToShow"
+        :text="textToShow"
+      />
+    </div>
+    <div
+      v-else-if="showBoard"
       class="game-view__board"
     >
       <Board
@@ -77,6 +90,8 @@ import TurnMoves from '@/components/TurnMoves.vue';
 import Wheel from '@/components/Wheel.vue';
 import LetterSelect from '@/components/LetterSelect.vue';
 import Solve from '@/components/Solve.vue';
+import NeonPrize from '@/components/NeonPrize.vue';
+import NeonText from '@/components/NeonText.vue';
 
 const router = useRouter()
 const { t: $t } = useI18n()
@@ -89,6 +104,8 @@ const hostText = ref('')
 const showWheel = ref(false)
 const guessLetter = ref<'vowel' | 'consonant' | null>(null)
 const showSolve = ref(false)
+const prizeToShow = ref<null | string>(null)
+const textToShow = ref<null | string>(null)
 const currentPlayerConfig = computed(() => {
   return typeof gameState.value?.currentPlayerIndex === 'number'
     ? playersConfig[gameState.value.currentPlayerIndex].value : null
@@ -174,17 +191,22 @@ const runIntro = async () => {
   await sleep(1000)
   hostText.value = $t(tKeyRandom('views.gameView.hostTexts.mainPrizeInfo'))
   await waitForHostToFinishTalking()
+  prizeToShow.value = 'polonez'
   await sleep(1000)
   hostText.value = $t(tKeyRandom('views.gameView.hostTexts.ready'))
   await waitForHostToFinishTalking()
+  prizeToShow.value = null
   await sleep(1000)
 }
 
-const runRound = async (roundIndex: 0 | 1 | 2 | 3 | 4) => {
-  hostText.value = $t(tKeyRandom('views.gameView.hostTexts.round1'))
+const runNextRound = async () => {
+  const roundIndex = gameState.value?.currentRoundIndex || 0
+  textToShow.value = $t(`views.gameView.neonTexts.round${roundIndex + 1}`)
+  hostText.value = $t(tKeyRandom(`views.gameView.hostTexts.round${roundIndex + 1}`))
   await waitForHostToFinishTalking()
-  showBoard.value = true
   await sleep(1000)
+  textToShow.value = null
+  showBoard.value = true
   hostText.value = $t(tKeyRandom('views.gameView.hostTexts.category'), { category: currentCategory.value })
   await waitForHostToFinishTalking()
   await sleep(1000)
@@ -194,6 +216,7 @@ const runRound = async (roundIndex: 0 | 1 | 2 | 3 | 4) => {
 const runNextTurn = async () => {
   const playerIndex = gameState.value?.currentPlayerIndex || 0
   let isFirstMoveInPlayersTurn = true
+  let roundFinished = false
   hostText.value = $t(tKeyRandom('views.gameView.hostTexts.playerTurn'), { name: currentPlayerConfig?.value?.name })
   await waitForHostToFinishTalking()
   await sleep(1000)
@@ -289,6 +312,7 @@ const runNextTurn = async () => {
 
       if (isCorrect) {
         hostText.value = $t(tKeyRandom('views.gameView.hostTexts.solveSuccess'))
+        roundFinished = true
       } else {
         hostText.value = $t(tKeyRandom('views.gameView.hostTexts.solveFail'))
       }
@@ -306,7 +330,13 @@ const runNextTurn = async () => {
   }
 
   showTurnActions.value = false
-  runNextTurn()
+
+  if (roundFinished) {
+    showBoard.value = false
+    await runNextRound()
+  } else {
+    runNextTurn()
+  }
 }
 
 if (!gameState.value) {
@@ -315,7 +345,7 @@ if (!gameState.value) {
   onMounted(async () => {
     await runIntro()
     introDone.value = true
-    await runRound(0)
+    await runNextRound()
   })
 }
 </script>
@@ -333,8 +363,15 @@ if (!gameState.value) {
       margin-bottom: 2rem;
     }
 
-    &__board {
+    &__board,
+    &__neon {
       flex: 1 0 auto;
+    }
+
+    &__neon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     &__players {

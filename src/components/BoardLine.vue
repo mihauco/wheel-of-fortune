@@ -35,9 +35,8 @@ defineProps<{
     border: 1px solid var(--main-color);
 
     &--empty {
-      background-color: #000;
-      background-color: #115911;
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAAXNSR0IArs4c6QAAACNJREFUGFdjnDdv3v+kpCRGBigA8cEcmASMRlEB04FdJTYzAdwIIbhcrs68AAAAAElFTkSuQmCC');
+      background-color: var(--board-tile-color);
+      background-image: var(--shadow-pattern-image);
     }
 
     &:not(:last-child) {

@@ -2,7 +2,7 @@
   <div class="host">
     <div class="host__avatar-wrapper card-wrapper">
       <img
-        src="/public/host.png"
+        src="/host.png?url"
         class="host__avatar"
       >
     </div>
